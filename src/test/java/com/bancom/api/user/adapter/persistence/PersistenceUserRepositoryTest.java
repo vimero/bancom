@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @DataJpaTest
 @ExtendWith(SpringExtension.class)
-public class PersistenceUserTest {
+public class PersistenceUserRepositoryTest {
 
     @Autowired
     private UserRepository userRepository;

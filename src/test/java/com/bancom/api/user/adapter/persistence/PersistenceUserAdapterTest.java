@@ -76,7 +76,6 @@ public class PersistenceUserAdapterTest {
     @DisplayName("Remove user")
     public void givenUserObject_whenRemoveUser_thenUserNotFound(){
         when(userRepository.findById(anyLong())).thenReturn(Optional.of(userEntity));
-        User user = User.builder().name("Vimero").build();
         persistenceUserAdapter.removeUser(21L);
     }
 

@@ -1,7 +1,13 @@
 package com.bancom.api.user.adapter.rest;
 
+import com.bancom.api.user.application.domain.Post;
 import com.bancom.api.user.application.domain.User;
+import com.bancom.api.user.application.port.output.PostApiPort;
 import com.bancom.api.user.application.port.output.UserApiPort;
+import com.bancom.api.user.application.usecase.post.CreatePostUseCase;
+import com.bancom.api.user.application.usecase.post.ListPostUseCase;
+import com.bancom.api.user.application.usecase.post.RemovePostUseCase;
+import com.bancom.api.user.application.usecase.post.UpdatePostUseCase;
 import com.bancom.api.user.application.usecase.user.CreateUserUseCase;
 import com.bancom.api.user.application.usecase.user.ListUserUseCase;
 import com.bancom.api.user.application.usecase.user.RemoveUserUseCase;
@@ -13,28 +19,37 @@ import java.util.List;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/post")
-public class PostRest implements UserApiPort {
+@RequestMapping("/posts")
+public class PostRest implements PostApiPort {
 
+
+    private ListPostUseCase listPostUseCase;
+    private CreatePostUseCase createPostUseCase;
+    private UpdatePostUseCase updatePostUseCase;
+    private RemovePostUseCase removePostUseCase;
 
     @Override
-    public List<User> list() {
-        return null;
+    @GetMapping
+    public List<Post> list() {
+        return listPostUseCase.getPosts();
     }
 
     @Override
-    public User create(User user) {
-        return null;
+    @PostMapping
+    public Post create(Post post) {
+        return createPostUseCase.create(post);
     }
 
     @Override
-    public User update(Long id, User user) {
-        return null;
+    @PutMapping("/{id}")
+    public Post update(@PathVariable Long id, String text) {
+        return updatePostUseCase.update(id, text);
     }
 
     @Override
-    public User remove(Long id) {
-        return null;
+    @DeleteMapping("/{id}")
+    public Post remove(@PathVariable Long id) {
+        return removePostUseCase.remove(id);
     }
 
 }

@@ -10,10 +10,10 @@ public interface PostApiPort {
 
    List<Post> list();
 
-   User create(Post post);
+   Post create(Post post);
 
-   User update (Long id, String text);
+   Post update (Long id, String text);
 
-   User remove (Long id);
+   Post remove (Long id);
 
 }
