@@ -11,9 +11,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @DataJpaTest
 @ExtendWith(SpringExtension.class)
@@ -30,10 +33,12 @@ public class PersistenceUserTest {
     public void setup(){
         userEntity = UserEntity.builder()
                 .id(21L)
+                .dateCreated(LocalDateTime.now())
                 .build();
 
         userEntityLocal = UserEntity.builder()
                 .id(22L)
+                .dateCreated(LocalDateTime.now())
                 .build();
     }
 
@@ -44,9 +49,8 @@ public class PersistenceUserTest {
     }
 
     @Test
-    @DisplayName("List all user entities")
+    @DisplayName("List all users")
     public void givenUsersList_whenFindAll_thenUsersList(){
-
         userRepository.save(userEntity);
         userRepository.save(userEntityLocal);
 
@@ -54,6 +58,30 @@ public class PersistenceUserTest {
 
         assertThat(userEntityList).isNotNull();
         assertThat(userEntityList.size()).isEqualTo(2);
+
+    }
+
+    @Test
+    @DisplayName("Save user")
+    public void givenUserObject_whenSaveUser_thenReturnUserObject(){
+        userRepository.save(userEntity);
+        UserEntity userEntityFind = userRepository.findById(21L).get();
+
+        assertThat(userEntityFind).isNotNull();
+    }
+
+    @Test
+    @DisplayName("Save user with date created null")
+    public void givenUserObject_whenSaveUser_thenReturnException(){
+        Exception exception = assertThrows(NullPointerException.class, () -> {
+            userEntity.setDateCreated(null);
+            userRepository.save(userEntity);
+        });
+
+        String expectedMessage = "dateCreated is marked non-null but is null";
+        String actualMessage = exception.getMessage();
+
+        assertTrue(actualMessage.contains(expectedMessage));
 
     }
 

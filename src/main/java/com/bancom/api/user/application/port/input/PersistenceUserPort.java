@@ -8,4 +8,6 @@ public interface PersistenceUserPort {
 
     List<User> getUsers();
 
+    User createUser(User user);
+
 }

@@ -8,4 +8,5 @@ public interface UserApiPort {
 
    List<User> list();
 
+   User create(User user);
 }

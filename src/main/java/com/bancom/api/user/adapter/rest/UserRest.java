@@ -2,11 +2,10 @@ package com.bancom.api.user.adapter.rest;
 
 import com.bancom.api.user.application.domain.User;
 import com.bancom.api.user.application.port.output.UserApiPort;
+import com.bancom.api.user.application.usecase.CreateUserUseCase;
 import com.bancom.api.user.application.usecase.ListUserUseCase;
 import lombok.AllArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -16,11 +15,18 @@ import java.util.List;
 public class UserRest implements UserApiPort {
 
     private ListUserUseCase listUserUseCase;
+    private CreateUserUseCase createUserUseCase;
 
     @Override
     @GetMapping
     public List<User> list() {
         return listUserUseCase.getUsers();
+    }
+
+    @Override
+    @PostMapping
+    public User create(@RequestBody User user) {
+        return createUserUseCase.create(user);
     }
 
 }

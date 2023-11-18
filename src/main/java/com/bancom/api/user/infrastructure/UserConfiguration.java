@@ -1,6 +1,7 @@
 package com.bancom.api.user.infrastructure;
 
 import com.bancom.api.user.application.port.input.PersistenceUserPort;
+import com.bancom.api.user.application.usecase.CreateUserUseCase;
 import com.bancom.api.user.application.usecase.ListUserUseCase;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,6 +12,11 @@ public class UserConfiguration {
     @Bean
     ListUserUseCase listUserUseCase(PersistenceUserPort persistenceUserPort){
         return new ListUserUseCase(persistenceUserPort);
+    }
+
+    @Bean
+    CreateUserUseCase createUserUseCase(PersistenceUserPort persistenceUserPort){
+        return new CreateUserUseCase(persistenceUserPort);
     }
 
 }
