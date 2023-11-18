@@ -2,7 +2,9 @@ package com.bancom.api.user.adapter.persistence;
 
 
 import com.bancom.api.user.adapter.persistence.mysql.entity.PostEntity;
+import com.bancom.api.user.adapter.persistence.mysql.entity.UserEntity;
 import com.bancom.api.user.adapter.persistence.mysql.repository.PostRepository;
+import com.bancom.api.user.adapter.persistence.mysql.repository.UserRepository;
 import com.bancom.api.user.application.domain.Post;
 import com.bancom.api.user.application.exception.NotFoundException;
 import org.junit.jupiter.api.*;
@@ -17,6 +19,7 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
@@ -27,14 +30,25 @@ public class PersistencePostAdapterTest {
     @Mock
     private PostRepository postRepository;
 
+    @Mock
+    private UserRepository userRepository;
+
     @InjectMocks
     private PersistencePostAdapter persistencePostAdapter;
 
     private PostEntity postEntity;
 
+    private UserEntity userEntity;
+
+
     @BeforeEach
     public void setup(){
         postEntity = PostEntity.builder()
+                .id(21L)
+                .dateCreated(LocalDateTime.now())
+                .build();
+
+        userEntity = UserEntity.builder()
                 .id(21L)
                 .dateCreated(LocalDateTime.now())
                 .build();
@@ -47,6 +61,24 @@ public class PersistencePostAdapterTest {
         assertThat(persistencePostAdapter).isNotNull();
     }
 
+
+    @Test
+    @DisplayName("Create post")
+    public void givenPostObject_whenCreatePost_thenReturnPostUpdated(){
+        Post postNew = Post.builder()
+                .id(40L)
+                .text("Hello World")
+                .user(21L)
+                .build();
+        when(userRepository.findById(anyLong())).thenReturn(Optional.of(userEntity));
+        when(postRepository.save(any(PostEntity.class))).thenReturn(postEntity);
+
+        Post post = persistencePostAdapter.createPost(postNew);
+
+        assertThat(postEntity).isNotNull();
+        assertThat(post).isNotNull();
+
+    }
 
     @Test
     @DisplayName("Update post")

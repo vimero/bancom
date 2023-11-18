@@ -1,14 +1,13 @@
 package com.bancom.api.user.adapter.persistence.mysql.entity;
 
+import com.bancom.api.user.application.domain.User;
 import com.sun.istack.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
@@ -24,6 +23,10 @@ public class PostEntity implements Serializable {
 
     @Column
     private String text;
+
+    @ManyToOne
+    @JoinColumn(name="userId", nullable=false)
+    private UserEntity user;
 
     @Column
     @NotNull

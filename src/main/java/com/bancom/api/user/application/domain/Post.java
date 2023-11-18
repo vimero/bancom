@@ -9,5 +9,6 @@ public class Post {
 
     private Long id;
     private String text;
+    private Long user;
 
 }

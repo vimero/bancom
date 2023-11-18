@@ -1,7 +1,9 @@
 package com.bancom.api.user.adapter.persistence;
 
 import com.bancom.api.user.adapter.persistence.mysql.entity.PostEntity;
+import com.bancom.api.user.adapter.persistence.mysql.entity.UserEntity;
 import com.bancom.api.user.adapter.persistence.mysql.repository.PostRepository;
+import com.bancom.api.user.adapter.persistence.mysql.repository.UserRepository;
 import com.bancom.api.user.application.domain.Post;
 import com.bancom.api.user.application.exception.NotFoundException;
 import com.bancom.api.user.application.port.input.PersistencePostPort;
@@ -20,6 +22,7 @@ import static java.util.stream.Collectors.toCollection;
 public class PersistencePostAdapter implements PersistencePostPort {
 
     private PostRepository postRepository;
+    private UserRepository userRepository;
 
     @Override
     public List<Post> getPosts() {
@@ -30,8 +33,14 @@ public class PersistencePostAdapter implements PersistencePostPort {
 
     @Override
     public Post createPost(Post post) {
-        PostEntity postEntity = toEntity(post);
-        postEntity.setDateCreated(LocalDateTime.now());
+        UserEntity userEntity = findUserById(post.getUser());
+
+        PostEntity postEntity = PostEntity.builder()
+                .id(post.getId())
+                .text(post.getText())
+                .dateCreated(LocalDateTime.now())
+                .user(userEntity)
+                .build();
 
         postEntity = postRepository.save(postEntity);
 
@@ -78,6 +87,15 @@ public class PersistencePostAdapter implements PersistencePostPort {
         }
 
         return postEntity.get();
+    }
+
+    public UserEntity findUserById(Long id) throws NotFoundException {
+        Optional<UserEntity> userEntity = userRepository.findById(id);
+        if(!userEntity.isPresent()){
+            throw new NotFoundException("User not found");
+        }
+
+        return userEntity.get();
     }
 
 }
