@@ -8,7 +8,9 @@ import java.io.Serializable;
 
 @Data
 @Entity
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
 public class UserEntity implements Serializable {
 
     @Id
