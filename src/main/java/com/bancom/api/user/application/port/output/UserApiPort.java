@@ -8,4 +8,10 @@ public interface UserApiPort {
 
    List<User> list();
 
+   User create(User user);
+
+   User update (Long id, User user);
+
+   User remove (Long id);
+
 }
