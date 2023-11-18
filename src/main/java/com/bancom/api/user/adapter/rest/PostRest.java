@@ -42,8 +42,8 @@ public class PostRest implements PostApiPort {
 
     @Override
     @PutMapping("/{id}/users/{user}")
-    public Post update(@PathVariable Long id, Long user,String text) {
-        return updatePostUseCase.update(id, user, text);
+    public Post update(@PathVariable Long id,  @PathVariable Long user, @RequestBody Post post) {
+        return updatePostUseCase.update(id, user, post.getText());
     }
 
     @Override
