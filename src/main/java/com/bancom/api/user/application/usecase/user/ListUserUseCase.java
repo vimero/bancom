@@ -1,16 +1,18 @@
-package com.bancom.api.user.application.usecase;
+package com.bancom.api.user.application.usecase.user;
 
 import com.bancom.api.user.application.domain.User;
 import com.bancom.api.user.application.port.input.PersistenceUserPort;
 import lombok.AllArgsConstructor;
 
+import java.util.List;
+
 @AllArgsConstructor
-public class CreateUserUseCase {
+public class ListUserUseCase {
 
     private PersistenceUserPort persistenceUserPort;
 
-    public User create(User user){
-        return persistenceUserPort.createUser(user);
+    public List<User> getUsers(){
+       return persistenceUserPort.getUsers();
     }
 
 }

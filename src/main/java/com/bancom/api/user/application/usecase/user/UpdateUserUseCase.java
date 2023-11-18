@@ -1,4 +1,4 @@
-package com.bancom.api.user.application.usecase;
+package com.bancom.api.user.application.usecase.user;
 
 import com.bancom.api.user.application.domain.User;
 import com.bancom.api.user.application.exception.NotFoundException;
