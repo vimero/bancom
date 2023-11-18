@@ -1,7 +1,6 @@
 package com.bancom.api.user.application.port.output;
 
 import com.bancom.api.user.application.domain.User;
-import com.bancom.api.user.application.exception.NotFoundException;
 
 import java.util.List;
 
@@ -11,6 +10,8 @@ public interface UserApiPort {
 
    User create(User user);
 
-   User update (Long id, User user) throws NotFoundException;
+   User update (Long id, User user);
+
+   User remove (Long id);
 
 }

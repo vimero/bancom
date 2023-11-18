@@ -13,4 +13,6 @@ public interface PersistenceUserPort {
 
     User updateUser(Long id, User user) throws NotFoundException;
 
+    User removeUser(Long id) throws NotFoundException;
+
 }

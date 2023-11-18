@@ -32,17 +32,10 @@ public class PersistenceUserAdapterTest {
 
     private UserEntity userEntity;
 
-    private UserEntity userEntityLocal;
-
     @BeforeEach
     public void setup(){
         userEntity = UserEntity.builder()
                 .id(21L)
-                .dateCreated(LocalDateTime.now())
-                .build();
-
-        userEntityLocal = UserEntity.builder()
-                .id(22L)
                 .dateCreated(LocalDateTime.now())
                 .build();
     }
@@ -61,6 +54,7 @@ public class PersistenceUserAdapterTest {
         when(userRepository.findById(anyLong())).thenReturn(Optional.of(userEntity));
         User user = User.builder().name("Vimero").build();
         persistenceUserAdapter.updateUser(21L, user);
+        assertThat(userEntity.getName()).isEqualTo("Vimero");
         assertThat(userEntity.getDateUpdated()).isNotNull();
     }
 
@@ -75,9 +69,15 @@ public class PersistenceUserAdapterTest {
 
         String expectedMessage = "User not found";
         String actualMessage = exception.getMessage();
-
         assertTrue(actualMessage.contains(expectedMessage));
+    }
 
+    @Test
+    @DisplayName("Remove user")
+    public void givenUserObject_whenRemoveUser_thenUserNotFound(){
+        when(userRepository.findById(anyLong())).thenReturn(Optional.of(userEntity));
+        User user = User.builder().name("Vimero").build();
+        persistenceUserAdapter.removeUser(21L);
     }
 
 }

@@ -49,18 +49,21 @@ public class PersistenceUserAdapter implements PersistenceUserPort {
 
     @Override
     public User updateUser(Long id, User user) throws NotFoundException {
-        Optional<UserEntity> userEntity = userRepository.findById(id);
-        if(userEntity.isPresent()){
-            UserEntity entity = userEntity.get();
-            entity.setName(user.getName());
-            entity.setLastName(user.getLastName());
-            entity.setCellphone(user.getCellphone());
-            entity.setPassword(user.getPassword());
-            entity.setDateUpdated(LocalDateTime.now());
-            return toDTO(entity);
-        }
-        throw new NotFoundException("User not found");
+        UserEntity userEntity = findById(id);
+        userEntity.setName(user.getName());
+        userEntity.setLastName(user.getLastName());
+        userEntity.setCellphone(user.getCellphone());
+        userEntity.setPassword(user.getPassword());
+        userEntity.setDateUpdated(LocalDateTime.now());
+        return toDTO(userEntity);
 
+    }
+
+    @Override
+    public User removeUser(Long id) throws NotFoundException {
+        UserEntity userEntity =findById(id);
+        userRepository.delete(userEntity);
+        return toDTO(userEntity);
     }
 
     private User toDTO(UserEntity userEntity){
@@ -82,6 +85,16 @@ public class PersistenceUserAdapter implements PersistenceUserPort {
                 .cellphone(user.getCellphone())
                 .password(user.getPassword())
                 .build();
+    }
+
+
+    public UserEntity findById(Long id) throws NotFoundException {
+        Optional<UserEntity> userEntity = userRepository.findById(id);
+        if(!userEntity.isPresent()){
+            throw new NotFoundException("User not found");
+        }
+
+        return userEntity.get();
     }
 
 }
