@@ -12,8 +12,8 @@ public class UpdatePostUseCase {
 
     private PersistencePostPort persistencePostPort;
 
-    public Post update(Long id, String text) throws NotFoundException {
-        return persistencePostPort.updatePost(id, text);
+    public Post update(Long id, Long user, String text) throws NotFoundException {
+        return persistencePostPort.updatePost(id, user, text);
     }
 
 }

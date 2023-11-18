@@ -3,6 +3,7 @@ package com.bancom.api.user.application.port.input;
 import com.bancom.api.user.application.domain.Post;
 import com.bancom.api.user.application.domain.User;
 import com.bancom.api.user.application.exception.NotFoundException;
+import com.bancom.api.user.application.exception.RuleViolatedException;
 
 import java.util.List;
 
@@ -12,7 +13,7 @@ public interface PersistencePostPort {
 
     Post createPost(Post post);
 
-    Post updatePost(Long id, String text) throws NotFoundException;
+    Post updatePost(Long id, Long user, String text) throws NotFoundException, RuleViolatedException;
 
     Post removePost(Long id) throws NotFoundException;
 

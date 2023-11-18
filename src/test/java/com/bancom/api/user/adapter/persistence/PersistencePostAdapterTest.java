@@ -7,6 +7,7 @@ import com.bancom.api.user.adapter.persistence.mysql.repository.PostRepository;
 import com.bancom.api.user.adapter.persistence.mysql.repository.UserRepository;
 import com.bancom.api.user.application.domain.Post;
 import com.bancom.api.user.application.exception.NotFoundException;
+import com.bancom.api.user.application.exception.RuleViolatedException;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -43,15 +44,18 @@ public class PersistencePostAdapterTest {
 
     @BeforeEach
     public void setup(){
-        postEntity = PostEntity.builder()
-                .id(21L)
-                .dateCreated(LocalDateTime.now())
-                .build();
 
         userEntity = UserEntity.builder()
                 .id(21L)
                 .dateCreated(LocalDateTime.now())
                 .build();
+
+        postEntity = PostEntity.builder()
+                .id(21L)
+                .dateCreated(LocalDateTime.now())
+                .user(userEntity)
+                .build();
+
     }
 
     @Test
@@ -84,18 +88,30 @@ public class PersistencePostAdapterTest {
     @DisplayName("Update post")
     public void givenPostObject_whenUpdatePost_thenReturnPostUpdated(){
         when(postRepository.findById(anyLong())).thenReturn(Optional.of(postEntity));
-        persistencePostAdapter.updatePost(21L, "Hello World");
+        persistencePostAdapter.updatePost(21L, 21L,"Hello World");
         assertThat(postEntity.getText()).isEqualTo("Hello World");
         assertThat(postEntity.getDateUpdated()).isNotNull();
+    }
+
+    @Test
+    @DisplayName("Update post rule violated")
+    public void givenPostObject_whenUpdatePost_thenReturnRuleViolated(){
+        when(postRepository.findById(anyLong())).thenReturn(Optional.of(postEntity));
+
+        Exception exception = assertThrows(RuleViolatedException.class, () -> {
+            persistencePostAdapter.updatePost(21L, 22L,"Hello World");
+        });
+        String expectedMessage = "User cannot post updated to other author";
+        String actualMessage = exception.getMessage();
+        assertTrue(actualMessage.contains(expectedMessage));
     }
 
     @Test
     @DisplayName("Update post when id is not found")
     public void givenPostObject_whenUpdatePost_thenReturnNotFoundException(){
         when(postRepository.findById(anyLong())).thenReturn(Optional.empty());
-        Post post = Post.builder().text("Hello").build();
         Exception exception = assertThrows(NotFoundException.class, () -> {
-            persistencePostAdapter.updatePost(22L, "Hello World");
+            persistencePostAdapter.updatePost(22L, 21L,"Hello World");
         });
 
         String expectedMessage = "Post not found";

@@ -12,7 +12,7 @@ public interface PostApiPort {
 
    Post create(Post post);
 
-   Post update (Long id, String text);
+   Post update (Long id, Long user, String text);
 
    Post remove (Long id);
 

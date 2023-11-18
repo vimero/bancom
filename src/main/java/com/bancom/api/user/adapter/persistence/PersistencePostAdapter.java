@@ -6,6 +6,7 @@ import com.bancom.api.user.adapter.persistence.mysql.repository.PostRepository;
 import com.bancom.api.user.adapter.persistence.mysql.repository.UserRepository;
 import com.bancom.api.user.application.domain.Post;
 import com.bancom.api.user.application.exception.NotFoundException;
+import com.bancom.api.user.application.exception.RuleViolatedException;
 import com.bancom.api.user.application.port.input.PersistencePostPort;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -49,12 +50,14 @@ public class PersistencePostAdapter implements PersistencePostPort {
     }
 
     @Override
-    public Post updatePost(Long id, String text) throws NotFoundException {
+    public Post updatePost(Long id, Long user, String text) throws NotFoundException, RuleViolatedException {
         PostEntity postEntity = findById(id);
-        postEntity.setText(text);
-        postEntity.setDateUpdated(LocalDateTime.now());
-        return toDTO(postEntity);
-
+        if( postEntity.getUser().getId().equals(user)){
+            postEntity.setText(text);
+            postEntity.setDateUpdated(LocalDateTime.now());
+            return toDTO(postEntity);
+        }
+        throw new RuleViolatedException("User cannot post updated to other author");
     }
 
     @Override
