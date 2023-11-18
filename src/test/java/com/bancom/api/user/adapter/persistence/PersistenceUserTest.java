@@ -25,6 +25,7 @@ public class PersistenceUserTest {
     @Autowired
     private UserRepository userRepository;
 
+
     private UserEntity userEntity;
 
     private UserEntity userEntityLocal;
