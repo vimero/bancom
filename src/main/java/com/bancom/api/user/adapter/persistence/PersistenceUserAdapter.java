@@ -26,7 +26,6 @@ public class PersistenceUserAdapter implements PersistenceUserPort {
         return userRepository.findAll().stream()
                 .map(entity -> toDTO(entity))
                 .collect(toCollection(ArrayList::new));
-
     }
 
     @Override
